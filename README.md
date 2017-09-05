@@ -1,3 +1,10 @@
+## Penumbra UWP
+
+This is a fork of the original penumbra project by discosultan:
+https://github.com/discosultan/penumbra
+
+The aim of this for is to create a build of penumbra that will work with MonoGame UWP projects. Instructions for adding to your UWP project are below in the "Using Penumbra UWP" section.
+
 ## What is this sorcery?
 
 Penumbra allows users to easily add 2D lighting with shadowing effects to their games.
@@ -18,15 +25,30 @@ The following is required to successfully compile the Penumbra MonoGame solution
 - MonoGame 3.6+
 - [DirectX End-User Runtimes (June 2010)](http://www.microsoft.com/en-us/download/details.aspx?id=8109) (to compile effect shaders)
 
-### Using Penumbra
+### Using Penumbra UWP
 
-> Currently available only for MonoGame WindowsDX platform targeting .NET 4.5+!
+This is a fork of the original Penumbra project by discosultan, the original project only supported WindowsDX and OpenGL monogame projects. This fork only supports UWP MonoGame projects, so if you want the WindowsDX or OpenGL versions please go to the original project:
 
-Install the assembly through NuGet:
+https://github.com/discosultan/penumbra
 
-```powershell
-Install-Package MonoGame.Penumbra.WindowsDX
-```
+To get started: 
+- clone this project and build it using visual studio, this will build the required files:
+    - Monogame.Penumbra.UWP.dll
+    - Content\PenumbraHull.fx
+    - Content\PenumbraLight.fx
+    - Content\PenumbraShadow.fx
+    - Content\PenumbraTexture.fx
+    - Content\Macros.fxh
+- In your MonoGame UWP project, add a reference to the built Monogame.Penumbra.UWP.dll you just built
+- Next, open up your content pipeline tool for your MonoGame UWP project. You need to add in Penumbra's fx files and the Macros.fxh file
+    - Edit -> Add -> Existing Item
+    - Select all the fx files and the Macros.fxh file you built earlier. When prompted choose to make a copy of the files.
+    - Exclude the Macros.fxh file from the content pipeline tool (don't delete it just exclude it). This is required by the fx files but it doesn't need to be built by the content pipeline tool.
+    - Run a build in the content pipeline tool to make sure everything is setup correctly
+- Start using Penumbra
+
+A video of how to set this all up is comming soon..
+
 
 In the game constructor, create the Penumbra component and add to components:
 ```cs
