@@ -36,6 +36,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -135,14 +136,26 @@
     <EmbeddedResource Include="Properties\MonoGame.Penumbra.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\PenumbraHull.fx" />
-    <Content Include="Content\PenumbraLight.fx" />
-    <Content Include="Content\PenumbraShadow.fx" />
-    <Content Include="Content\PenumbraTexture.fx" />
+    <EmbeddedResource Include="Content\PenumbraHull.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\PenumbraLight.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\PenumbraShadow.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\PenumbraTexture.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\Content.UWP.mgcb" />
-    <None Include="Content\Macros.fxh" />
+    <EmbeddedResource Include="Content\Content.UWP.mgcb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\Macros.fxh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
