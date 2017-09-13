@@ -47,7 +47,7 @@ To get started:
     - Run a build in the content pipeline tool to make sure everything is setup correctly
 - Start using Penumbra
 
-A video of how to set this all up is comming soon..
+Here is a video of how to use this fork: http://youtu.be/HE3Xmy3a5Ok
 
 
 In the game constructor, create the Penumbra component and add to components:
