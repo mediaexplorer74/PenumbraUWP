@@ -5,6 +5,8 @@ https://github.com/discosultan/penumbra
 
 The aim of this for is to create a build of penumbra that will work with MonoGame UWP projects. Instructions for adding to your UWP project are below in the "Using Penumbra UWP" section.
 
+Otherwise, here is a video of how to use this fork: http://youtu.be/HE3Xmy3a5Ok
+
 ## What is this sorcery?
 
 Penumbra allows users to easily add 2D lighting with shadowing effects to their games.
