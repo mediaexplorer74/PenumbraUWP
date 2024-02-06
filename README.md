@@ -134,10 +134,8 @@ penumbra.Hulls.Add(hull);
 ## Samples
 
 - **HelloPenumbra**: Simple sample which sets up bare basics of Penumbra with a single light source and shadow hull.
-- **Platformer2D**: Penumbra lighting applied to [MonoGame Platformer2D samples game](https://github.com/MonoGame/MonoGame.Samples).
-- **Sandbox**: Generic sandbox for testing out various different scenarios.
-- **Common**: Supporting library providing common functionality for samples.
-- **[FarseerPhysics](https://github.com/discosultan/penumbra/tree/master/Samples/FarseerPhysics)**: Create physical bodies out of sprites and add them as hulls to Penumbra!
+- **Platformer2D**: Penumbra lighting applied to [MonoGame Platformer2D samples game](https://github.com/MonoGame/MonoGame.Samples). Draft.
+
 
 ## ..
 As is. No support. RnD only. DIY.
