@@ -10,14 +10,9 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
-using Microsoft.Xna.Framework.Content;
-using System.Linq;
-
-
-#if !__IOS__
 using Microsoft.Xna.Framework.Media;
-#endif
+using Microsoft.Xna.Framework.Input.Touch;
+using Penumbra;
 
 namespace Platformer2D
 {
@@ -28,10 +23,13 @@ namespace Platformer2D
     {
         // Resources for drawing.
         private GraphicsDeviceManager graphics;
+        private PenumbraComponent penumbra;
         private SpriteBatch spriteBatch;
+        
         Vector2 baseScreenSize = new Vector2(800, 480);
         private Matrix globalTransformation;
         int backbufferWidth, backbufferHeight;
+
 
         // Global content.
         private SpriteFont hudFont;
@@ -48,7 +46,7 @@ namespace Platformer2D
         // When the time remaining is less than the warning time, it blinks on the hud
         private static readonly TimeSpan WarningTime = TimeSpan.FromSeconds(30);
 
-        // We store our input states so that we only poll once per frame, 
+        // We store our input states so that we only poll once per frame,
         // then we use the same input state wherever needed
         private GamePadState gamePadState;
         private KeyboardState keyboardState;
@@ -61,23 +59,32 @@ namespace Platformer2D
         // levels in our content are 0-based and that all numbers under this constant
         // have a level file present. This allows us to not need to check for the file
         // or handle exceptions, both of which can add unnecessary time to level loading.
-        private const int numberOfLevels = 4;//3;
+        private const int numberOfLevels = 3;
 
         public PlatformerGame()
         {
             graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
 
 #if WINDOWS_PHONE
             TargetElapsedTime = TimeSpan.FromTicks(333333);
 #endif
-            graphics.IsFullScreen = true;//false;
+            graphics.IsFullScreen = true;//false; //set true for W10M
 
-            //graphics.PreferredBackBufferWidth = 800;
-            //graphics.PreferredBackBufferHeight = 480;
+            //graphics.PreferredBackBufferWidth = 800;//1280;
+            //graphics.PreferredBackBufferHeight = 480;//720;
+            
             graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft
-                | DisplayOrientation.LandscapeRight;// | DisplayOrientation.Portrait;
+                | DisplayOrientation.LandscapeRight;
 
             Accelerometer.Initialize();
+
+            // Create our lighting component and register it as a service so that subsystems can access it.
+            penumbra = new PenumbraComponent(this)
+            {
+                AmbientColor = new Color(new Vector3(0.1f))
+            };
+            Services.AddService(penumbra);
         }
 
         /// <summary>
@@ -86,8 +93,6 @@ namespace Platformer2D
         /// </summary>
         protected override void LoadContent()
         {
-            this.Content.RootDirectory = "Content";
-
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -99,13 +104,16 @@ namespace Platformer2D
             loseOverlay = Content.Load<Texture2D>("Overlays/you_lose");
             diedOverlay = Content.Load<Texture2D>("Overlays/you_died");
 
+            //Work out how much we need to scale our graphics to fill the screen
+            //float horScaling = GraphicsDevice.PresentationParameters.BackBufferWidth / baseScreenSize.X;
+            //float verScaling = GraphicsDevice.PresentationParameters.BackBufferHeight / baseScreenSize.Y;
+            //Vector3 screenScalingFactor = new Vector3(horScaling, verScaling, 1);
+            //globalTransformation = Matrix.CreateScale(screenScalingFactor);
             ScalePresentationArea();
 
-            virtualGamePad = new VirtualGamePad(baseScreenSize, 
-                globalTransformation, 
-                Content.Load<Texture2D>("Sprites/VirtualControlArrow"));
 
-#if !__IOS__
+            virtualGamePad = new VirtualGamePad(baseScreenSize, globalTransformation, Content.Load<Texture2D>("Sprites/VirtualControlArrow"));
+
             //Known issue that you get exceptions if you use Media PLayer while connected to your PC
             //See http://social.msdn.microsoft.com/Forums/en/windowsphone7series/thread/c8a243d2-d360-46b1-96bd-62b1ef268c66
             //Which means its impossible to test this from VS.
@@ -116,10 +124,17 @@ namespace Platformer2D
                 MediaPlayer.Play(Content.Load<Song>("Sounds/Music"));
             }
             catch { }
-#endif
+
+            // Load penumbra
+            penumbra.Initialize();
+            penumbra.Transform = globalTransformation;
+
             LoadNextLevel();
         }
 
+
+
+        // ScalePresentationArea
         public void ScalePresentationArea()
         {
             //Work out how much we need to scale our graphics to fill the screen
@@ -128,17 +143,18 @@ namespace Platformer2D
 
             float horScaling = backbufferWidth / baseScreenSize.X;
             float verScaling = backbufferHeight / baseScreenSize.Y;
-            
+
             Vector3 screenScalingFactor = new Vector3(horScaling, verScaling, 1);
-            
+
             globalTransformation = Matrix.CreateScale(screenScalingFactor);
-            
+
             System.Diagnostics.Debug.WriteLine("Screen Size - Width["
                 + GraphicsDevice.PresentationParameters.BackBufferWidth + "] " +
                 "Height [" + GraphicsDevice.PresentationParameters.BackBufferHeight + "]");
-        }
+        }//ScalePresentationArea
 
-        
+
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -150,13 +166,17 @@ namespace Platformer2D
             if (backbufferHeight != GraphicsDevice.PresentationParameters.BackBufferHeight ||
                 backbufferWidth != GraphicsDevice.PresentationParameters.BackBufferWidth)
             {
-                ScalePresentationArea();
+                //TODO: fix it!
+                //ScalePresentationArea();
             }
+
+            // TODO: Add your update logic here
+            
             // Handle polling for our input and handling high-level input
             HandleInput(gameTime);
 
             // update our level, passing down the GameTime along with all of our input states
-            level.Update(gameTime, keyboardState, gamePadState, 
+            level.Update(gameTime, keyboardState, gamePadState,
                          accelerometerState, Window.CurrentOrientation);
 
             if (level.Player.Velocity != Vector2.Zero)
@@ -173,7 +193,7 @@ namespace Platformer2D
             gamePadState = virtualGamePad.GetState(touchState, GamePad.GetState(PlayerIndex.One));
             accelerometerState = Accelerometer.GetState();
 
-#if !NETFX_CORE && !__IOS__
+#if !NETFX_CORE
             // Exit the game when back is pressed.
             if (gamePadState.Buttons.Back == ButtonState.Pressed)
                 Exit();
@@ -232,14 +252,27 @@ namespace Platformer2D
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            // Everything after this call will be affected by the lighting system.
+            penumbra.BeginDraw();
+
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null,null, globalTransformation);
-
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, globalTransformation);
             level.Draw(gameTime, spriteBatch);
+       
+            //RnD
+            //penumbra.Draw(gameTime);
+
+
+            spriteBatch.End();
+
+            // Draw the actual lit scene.
+            penumbra.Draw(gameTime);
+
+            // Draw stuff that is not affected by lighting (UI, etc).
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, globalTransformation);
 
             DrawHud();
-
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -256,7 +289,8 @@ namespace Platformer2D
 
             // Draw time remaining. Uses modulo division to cause blinking when the
             // player is running out of time.
-            string timeString = "TIME: " + level.TimeRemaining.Minutes.ToString("00") + ":" + level.TimeRemaining.Seconds.ToString("00");
+            string timeString = "TIME: " + level.TimeRemaining.Minutes.ToString("00")
+                + ":" + level.TimeRemaining.Seconds.ToString("00");
             Color timeColor;
             if (level.TimeRemaining > WarningTime ||
                 level.ReachedExit ||
@@ -272,8 +306,9 @@ namespace Platformer2D
 
             // Draw score
             float timeHeight = hudFont.MeasureString(timeString).Y;
-            DrawShadowedString(hudFont, "SCORE: " + level.Score.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.Yellow);
-           
+            DrawShadowedString(hudFont, "SCORE: " + level.Score.ToString(), 
+                hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.Yellow);
+
             // Determine the status overlay message to show.
             Texture2D status = null;
             if (level.TimeRemaining == TimeSpan.Zero)
@@ -299,7 +334,7 @@ namespace Platformer2D
                 spriteBatch.Draw(status, center - statusSize / 2, Color.White);
             }
 
-            if (true)//(touchState.IsConnected)
+            if (touchState.IsConnected)
                 virtualGamePad.Draw(spriteBatch);
         }
 

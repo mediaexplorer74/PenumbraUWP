@@ -3,6 +3,11 @@
 This is my fork of the original penumbra uwp project by Nixxs:
 https://github.com/Nixxs/PenumbraUWP
 
+## Screenshots
+![](Images/shot01.png)
+
+![](Images/shot02.png)
+
 ## My 2 cents (status)
 - Penumbra tuned on(to) Monigame.Framwork v3.7.xx.xx
 - HelloPenumbraUWP sample project research and minimal "re-dev"
@@ -134,7 +139,7 @@ penumbra.Hulls.Add(hull);
 ## Samples
 
 - **HelloPenumbra**: Simple sample which sets up bare basics of Penumbra with a single light source and shadow hull.
-- **Platformer2D**: Penumbra lighting applied to [MonoGame Platformer2D samples game](https://github.com/MonoGame/MonoGame.Samples). Draft.
+- **Platformer2D**: Penumbra lighting applied to [MonoGame Platformer2D samples game](https://github.com/MonoGame/MonoGame.Samples). Draft: light-positions not updated after screen resize yet...
 
 
 ## ..
