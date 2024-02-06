@@ -1,7 +1,13 @@
 ## Penumbra UWP
 
-This is a fork of the original penumbra project by discosultan:
-https://github.com/discosultan/penumbra
+This is my fork of the original penumbra uwp project by Nixxs:
+https://github.com/Nixxs/PenumbraUWP
+
+## My 2 cents (status)
+- Penumbra tuned on(to) Monigame.Framwork v3.7.xx.xx
+- HelloPenumbraUWP sample project research and minimal "re-dev"
+- Platformer2D sample project init. 
+
 
 The aim of this for is to create a build of penumbra that will work with MonoGame UWP projects. Instructions for adding to your UWP project are below in the "Using Penumbra UWP" section.
 
@@ -13,11 +19,7 @@ Penumbra allows users to easily add 2D lighting with shadowing effects to their 
 
 > Note that this project is no longer in development. I do try to fix any bugs though!
 
-![Platformer2D sample](Documentation/Platformer2D.jpg)
 
-- https://www.youtube.com/watch?v=L9w9mEAb9gk&feature=youtu.be
-
-## Getting Started
 
 ### Building source and samples
 
@@ -136,3 +138,10 @@ penumbra.Hulls.Add(hull);
 - **Sandbox**: Generic sandbox for testing out various different scenarios.
 - **Common**: Supporting library providing common functionality for samples.
 - **[FarseerPhysics](https://github.com/discosultan/penumbra/tree/master/Samples/FarseerPhysics)**: Create physical bodies out of sprites and add them as hulls to Penumbra!
+
+## ..
+As is. No support. RnD only. DIY.
+
+## .
+[m][e] 2024
+
