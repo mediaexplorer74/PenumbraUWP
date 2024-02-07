@@ -1,12 +1,18 @@
-## Penumbra UWP
+## Penumbra UWP v1.0.0.6 (alpha)
 
 This is my fork of the original penumbra uwp project by Nixxs:
 https://github.com/Nixxs/PenumbraUWP
+
+My main goal is/was: adapdation for W10M (Astoria included). And second (goal): explore "virtual pad" hiding problem on Astoria.
 
 ## Screenshots
 ![](Images/shot01.png)
 
 ![](Images/shot02.png)
+
+![](Images/shot03.png)
+
+![](Images/shot04.png)
 
 ## My 2 cents (status)
 - Penumbra tuned on(to) Monigame.Framwork v3.7.xx.xx
